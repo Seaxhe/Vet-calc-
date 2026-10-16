@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#102033">
+  <meta name="description" content="A mobile-friendly veterinary calculation aid for dogs and cats.">
+  <title>Vet Calculator JT</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="app-header">
+    <div class="brand-mark" aria-hidden="true">🐾</div>
+    <div><h1>Vet Calculator</h1><p>Dogs &amp; cats · Metric units</p></div>
+  </header>
+
+  <aside class="safety-banner" role="note">
+    <strong>Clinical safety reminder</strong>
+    <p>This app performs calculations; it does not validate whether a medication, dose, route, or treatment is appropriate for a patient. Verify current references, product labels, patient factors, and hospital protocols before administration. Emergency doses are not pre-filled.</p>
+  </aside>
+
+  <nav class="main-nav" aria-label="Calculator sections">
+    <button class="nav-button active" data-tab="pain">Pain &amp; Anesthesia</button>
+    <button class="nav-button" data-tab="fluids">Fluids</button>
+    <button class="nav-button" data-tab="nutrition">Nutrition</button>
+    <button class="nav-button" data-tab="gi">GI Drugs</button>
+    <button class="nav-button emergency-nav" data-tab="emergency">Emergency</button>
+    <button class="nav-button" data-tab="settings">Settings</button>
+  </nav>
+
+  <main>
+    <section class="tab active" id="pain" aria-labelledby="pain-title">
+      <div class="panel patient-panel">
+        <h2 id="pain-title">Patient</h2>
+        <div class="segmented" role="group" aria-label="Species">
+          <button id="species-dog" class="selected" type="button">Dog</button>
+          <button id="species-cat" type="button">Cat</button>
+        </div>
+        <label for="pain-weight">Weight (kg)</label>
+        <input id="pain-weight" type="number" min="0.01" step="0.1" inputmode="decimal" placeholder="Enter patient weight">
+      </div>
+      <h3 class="section-heading">Sedation &amp; premedication</h3><div id="pain-sedatives" class="drug-grid"></div>
+      <h3 class="section-heading">Injectable anesthetics</h3><div id="pain-anesthetics" class="drug-grid"></div>
+      <h3 class="section-heading">Analgesia &amp; other</h3><div id="pain-analgesia" class="drug-grid"></div>
+    </section>
+
+    <section class="tab" id="fluids" aria-labelledby="fluids-title">
+      <div class="panel">
+        <h2 id="fluids-title">Fluid estimate</h2>
+        <div class="segmented" role="group" aria-label="Species for fluid estimate">
+          <button id="fluid-dog" class="selected" type="button">Dog</button><button id="fluid-cat" type="button">Cat</button>
+        </div>
+        <label for="fluid-weight">Weight (kg)</label><input id="fluid-weight" type="number" min="0.01" step="0.1" inputmode="decimal" placeholder="Enter weight">
+        <label for="dehydration">Estimated dehydration (%)</label><input id="dehydration" type="number" min="0" max="15" step="0.5" value="0" inputmode="decimal">
+        <label for="ongoing-losses">Ongoing losses (mL/hr)</label><input id="ongoing-losses" type="number" min="0" step="any" value="0" inputmode="decimal">
+        <div id="fluid-result" class="result-box" aria-live="polite">Enter a valid weight to calculate.</div>
+        <p class="helper-text">This estimate is not a fluid prescription. Individualize fluid type, rate, deficit correction, monitoring, and comorbidity adjustments.</p>
+      </div>
+    </section>
+
+    <section class="tab" id="nutrition" aria-labelledby="nutrition-title">
+      <div class="panel">
+        <h2 id="nutrition-title">Energy requirement estimate</h2>
+        <label for="nutrition-weight">Weight (kg)</label><input id="nutrition-weight" type="number" min="0.01" step="0.1" inputmode="decimal" placeholder="Enter weight">
+        <label for="nutrition-status">Starting multiplier</label>
+        <select id="nutrition-status">
+          <option value="1.6">Neutered adult · 1.6 × RER</option>
+          <option value="1.8">Intact adult · 1.8 × RER</option>
+          <option value="1.2">Hospitalized · 1.2 × RER</option>
+          <option value="1.5">Critical care · 1.5 × RER</option>
+          <option value="1">Weight loss · 1.0 × RER</option>
+        </select>
+        <label for="meals-per-day">Meals per day</label><input id="meals-per-day" type="number" min="1" step="1" value="2" inputmode="numeric">
+        <div id="nutrition-result" class="result-box" aria-live="polite">Enter a valid weight to calculate.</div>
+        <p class="helper-text">Starting estimates only. Adjust for body condition, disease, intake, and serial weight trends.</p>
+      </div>
+    </section>
+
+    <section class="tab" id="gi" aria-labelledby="gi-title">
+      <div class="panel"><h2 id="gi-title">Patient</h2><label for="gi-weight">Weight (kg)</label><input id="gi-weight" type="number" min="0.01" step="0.1" inputmode="decimal" placeholder="Enter weight"></div>
+      <div id="gi-drugs" class="drug-grid"></div>
+    </section>
+
+    <section class="tab" id="emergency" aria-labelledby="emergency-title">
+      <div class="panel">
+        <div class="panel-title-row"><h2 id="emergency-title">Emergency rapid calculator</h2><span class="tag warning-tag">Verify independently</span></div>
+        <p class="muted">Choose a medication and enter a dose verified from your current emergency protocol or reference. No emergency dose is preselected or recommended here.</p>
+        <label for="emergency-weight">Weight (kg)</label><input id="emergency-weight" type="number" min="0.01" step="0.1" inputmode="decimal" placeholder="Enter weight">
+        <label for="emergency-drug">Medication</label><select id="emergency-drug"></select>
+        <div id="emergency-concentration" class="concentration-display">Concentration: —</div>
+        <label for="emergency-dose">Verified dose (mg/kg)</label><input id="emergency-dose" type="number" min="0" step="any" inputmode="decimal" placeholder="Enter verified dose">
+        <div id="emergency-result" class="result-box" aria-live="polite">Enter a weight and verified dose.</div>
+        <p class="helper-text">Mass-based doses only. This tool does not calculate infusion rates, dilution instructions, or non-mass dosing. Confirm drug, route, units, and actual product concentration.</p>
+      </div>
+      <div class="panel"><h3>Rapid safety checklist</h3><ul class="checklist"><li>Confirm patient and current weight.</li><li>Confirm drug, indication, dose, route, and product concentration.</li><li>Use current hospital emergency / CPR protocols.</li><li>Arrange an independent double-check for high-risk medications.</li><li>Reassess and document the response.</li></ul></div>
+    </section>
+
+    <section class="tab" id="settings" aria-labelledby="settings-title">
+      <div class="panel">
+        <h2 id="settings-title">Global medication concentrations</h2>
+        <p class="muted">A concentration is shared wherever that medication appears. Changing concentration recalculates volume only; it does not change the dose range. Settings are saved in this browser on this device.</p>
+        <div id="settings-list"></div>
+        <div class="button-row"><button id="save-settings" class="primary-button" type="button">Save settings</button><button id="restore-settings" class="danger-button" type="button">Restore defaults</button></div>
+        <p id="settings-message" class="helper-text" role="status" aria-live="polite"></p>
+      </div>
+      <div class="panel"><h3>About default values</h3><p class="muted">Defaults are editable starting values and may not match the products stocked at your hospital. Verify every concentration and unit against the actual product label before use. Local browser storage is not encrypted medical-record storage.</p></div>
+    </section>
+  </main>
+  <footer><p>Vet Calculator · Calculation aid only · Verify before clinical use</p></footer>
+  <script src="app.js"></script>
+</body>
+</html>
